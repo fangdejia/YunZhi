@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 /**
  * 用户登录管理
  *
- * User: zhuyong
+ * User: yinaijing
  * Date: 2018/5/12 11:55
  */
 @Controller
