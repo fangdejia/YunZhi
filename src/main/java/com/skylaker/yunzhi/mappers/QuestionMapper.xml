@@ -8,7 +8,7 @@
         SELECT
             Q.*,
             U.USERNAME,
-            U.SIGNATUREQ
+            U.SIGNATURE
         FROM
             QUESTION  Q
         JOIN

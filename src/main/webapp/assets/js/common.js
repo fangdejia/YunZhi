@@ -12,6 +12,7 @@ function getUserInfo() {
         url:  getBaseUrl() + "login/getUserInfo.do",
         type: "GET",
         contentType:"application/json",
+        async:false,
         success:function (data) {
             if(!isNullOrEmpty(data.id)){
                 $("#username").text(data.username);
@@ -19,7 +20,19 @@ function getUserInfo() {
                     $("#signature").text(data.signature);
                 }
 
-                loadUserHeadImg();
+                $.ajax({
+                    url:  getBaseUrl() + "user/getUserHeadImg.do",
+                    type: "GET",
+                    contentType:"application/json",
+                    async:false,
+                    success:function (data) {
+                        if(data && !isNullOrEmpty(data.imgpath)){
+                            $("#userHeadImg").attr("src", "assets/images" + data.imgpath);
+                        }else{
+                            $("#userHeadImg").attr("src", "assets/images/UserHeadImg/8664332d3be345359bb602e21c95c92b.jpg");
+                        }
+                    }
+                });
             }
         }
     });
@@ -58,6 +71,7 @@ function search() {
         type: "GET",
         contentType:"application/json",
         success:function (data) {
+            console.log(data);
         }
     });
 }
@@ -268,11 +282,12 @@ function loadUserHeadImg(){
         url:  getBaseUrl() + "user/getUserHeadImg.do",
         type: "GET",
         contentType:"application/json",
+        async:false,
         success:function (data) {
             if(data && !isNullOrEmpty(data.imgpath)){
-                $("#userHeadImg").attr("src", "/path" +  data.imgpath);
+                $("#userHeadImg").attr("src", "../assets/images" + data.imgpath);
             }else{
-                $("#userHeadImg").attr("src", contextPath + "/assets/plugins/layui/images/user1.jpg");
+                $("#userHeadImg").attr("src", "../assets/images/UserHeadImg/8664332d3be345359bb602e21c95c92b.jpg");
             }
         }
     });

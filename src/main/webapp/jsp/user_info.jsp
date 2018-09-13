@@ -58,7 +58,7 @@
                 <div class="layui-row">
                     <%--用户头像--%>
                     <div class="layui-col-md3">
-                        <img id="userHeadImg" name="file" class="userBigHead"/>
+                        <img id="userHeadImg" name="file"  class="userBigHead"/>
                     </div>
                     <div class="layui-col-md9">
                         <div class="layui-card" style="margin-top:50px">

@@ -29,7 +29,7 @@ public class SearchController {
      * @param   words  检索关键词
      * @return
      */
-    @RequestMapping(value = "/text", method = RequestMethod.GET)
+    @RequestMapping(value = "/text", method = RequestMethod.GET,produces = "text/plain;charset=utf-8")
     public @ResponseBody List<Object> getSearchResult(@RequestParam("words")String words){
         return luceneService.getSearchResult(words);
     }

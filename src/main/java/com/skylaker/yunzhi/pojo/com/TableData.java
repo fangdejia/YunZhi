@@ -1,5 +1,7 @@
 package com.skylaker.yunzhi.pojo.com;
 
+import com.skylaker.yunzhi.pojo.res.IResult;
+
 import java.util.List;
 
 /**
@@ -16,9 +18,15 @@ public class TableData <T>{
     private int count = 1000;
 
     private List<T> data;
-
-
+    
     public TableData(List<T> data){
+        this.data = data;
+        this.count = data.size();
+    }
+
+    public TableData(IResult iResult, List<T> data){
+        this.code =iResult.getCode();
+        this.msg = iResult.getMessage();
         this.data = data;
         this.count = data.size();
     }

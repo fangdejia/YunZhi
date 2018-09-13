@@ -28,7 +28,7 @@
 
 	<!--获取用户头像信息-->
 	<select id="getUserHeadImg" parameterType="java.lang.Integer" resultType="fileupload">
-		<!--SELECT
+		SELECT
 			*
 		FROM
 			fileupload
@@ -41,6 +41,6 @@
 					FILEUPLOAD
 			  	WHERE
 			  		FCODE = CONCAT('USERHEADIMG_', #{userId})
-			)-->
+			)
 	</select>
 </mapper>

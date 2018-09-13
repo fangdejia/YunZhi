@@ -1,37 +1,34 @@
 package com.skylaker.yunzhi.service.impl;
 
 import com.skylaker.yunzhi.config.GlobalConstant;
+import com.skylaker.yunzhi.mappers.QuestionMapper;
 import com.skylaker.yunzhi.pojo.db.Answer;
 import com.skylaker.yunzhi.pojo.db.Question;
 import com.skylaker.yunzhi.pojo.res.BaseResult;
 import com.skylaker.yunzhi.pojo.res.IResult;
 import com.skylaker.yunzhi.service.ILuceneService;
 import com.skylaker.yunzhi.utils.BaseUtil;
+import com.skylaker.yunzhi.utils.Conv;
+import com.skylaker.yunzhi.utils.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 
 /**
  * <p>
@@ -47,7 +44,8 @@ import java.util.Set;
 public class LuceneServiceImpl implements ILuceneService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
+    @Autowired
+    QuestionMapper questionMapper;
     //指定索引目录
     private static Directory directory = null;
     //分词对象
@@ -131,7 +129,7 @@ public class LuceneServiceImpl implements ILuceneService {
             getIndexWriter().commit();
 
             //关闭索引处理对象
-            // super.getIndexWriter().close();
+            getIndexWriter().close();
 
             return BaseResult.SUCCESS;
         } catch (IOException e) {
@@ -194,10 +192,14 @@ public class LuceneServiceImpl implements ILuceneService {
             return null;
         }
 
+        StringBuilder qids = new StringBuilder();
+        List<Question> questionList = new ArrayList<>();
+
         try {
             //检索单个字段
-            //Query query = new TermQuery(new Term("q_title", words));
-
+            //Query query = new TermQuery(new Term("q_title",words));
+//            QueryParser parser = new QueryParser("q_title",analyzer);
+//            Query query = parser.parse(words);
             //检索多个字段
             String[] queryWords = new String[]{words, words, words};
             String[] fields = {"q_title", "q_text", "a_text"};
@@ -216,11 +218,14 @@ public class LuceneServiceImpl implements ILuceneService {
                 logger.debug("检索到数据：" + title);
 
                 if(!BaseUtil.isNullOrEmpty(title)){
-                    Integer qid = Integer.parseInt(document.get("q_id"));
-                    //TODO 可获取问题对象
+                    //Integer qid = Integer.parseInt(document.get("q_qid"));
+                    if(i == topDocs.scoreDocs.length-1)
+                        qids.append(document.get("q_qid"));
+                    else
+                        qids.append(document.get("q_qid")+',');
                 }
             }
-
+            questionList = questionMapper.getQuestionsList(qids.toString());
             //TODO 可以分别解析问题、回答数据索引
             //TODO 根据检索结果得到相关的问题、回答，然后查询问题、回答信息，封装成集合返回到前台展示
         } catch (IOException e) {
@@ -229,6 +234,6 @@ public class LuceneServiceImpl implements ILuceneService {
             e.printStackTrace();
         }
 
-        return null;
+        return Collections.singletonList(questionList);
     }
 }

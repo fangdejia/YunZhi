@@ -170,7 +170,7 @@ public class QuestionServiceImpl extends BaseService<Question> implements IQuest
         //分页查询用户问题
         PageInfo pageInfo = new PageInfo(page, GlobalConstant.QUESTIONS_NUM);
         pageInfo.setUserid(userId);
-        List<Question> questionsList = questionMapper.getUserQuestions(pageInfo);
+        List<Question> questionsList = new ArrayList<>();//questionMapper.getUserQuestions(pageInfo);
 
         //获取用户提问的所有问题数量
         Long questionsCount = redisService.getUserQuestionsCount(userId);

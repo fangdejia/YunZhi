@@ -55,7 +55,7 @@ public interface IUserService {
     void saveRegisterUser(User user);
 
     /**
-     * 获取用户头像相对路径
+     * 获取用户头像绝对路径
      *
      * @param userId
      * @return
